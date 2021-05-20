@@ -19,9 +19,6 @@ exports.getById = async (req, res) => {
         const response = await db.query(
             'SELECT * FROM en_user WHERE codigo = $1', [userId],
         );
-        if (response.rowCount === 0) {
-            return res.status(404).send("Usuário não encontrado");
-        }
 
         res.status(200).send(response.rows[0]);
     } catch (error) {
@@ -40,9 +37,7 @@ exports.insertUser = async (req, res) => {
         const response = await db.query(
             'INSERT INTO en_user (nome, data_nascimento, foto) VALUES ($1, $2, $3) RETURNING codigo', [user.name, user.birthDate, user.photo],
         );
-        if (response.rowCount === 0) {
-            return res.status(404).send("Usuário não encontrado");
-        }
+        
         res.status(201).send({ ...user, codigo: response.rows[0].codigo });
     } catch (error) {
         res.status(400).send(GENERIC_MESSAGE);
@@ -63,7 +58,7 @@ exports.updateUser = async (req, res) => {
             [user.name, user.birthDate, user.photo, userId],
         );
         if (response.rowCount === 0) {
-            return res.status(404).send("Não foi possível atualizar as informações do usuário");
+            return res.status(400).send("Não foi possível atualizar as informações do usuário");
         }
         res.status(201).send(user);
     } catch (error) {
