@@ -7,7 +7,7 @@ module.exports = (app) => {
 
     route.get('/', userController.listAllUsers);
 
-    route.get('/:id', userController.getById);
+    route.get('/:code', userController.getById);
 
     route.post('/', userController.insertUser);
 
